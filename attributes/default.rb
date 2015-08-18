@@ -58,21 +58,12 @@ default['docker']['binary']['checksum'] =
 case node['kernel']['name']
 when 'Darwin'
   case node['docker']['binary']['version']
-  when '0.10.0' then '416835b2e83e520c3c413b4b4e4ae34bca20704f085b435f4c200010dd1ac3b7'
-  when '0.11.0' then '9db839b56a8656cfcef1f6543e9f75b01a774fdd6a50457da20d8183d6b415fa'
-  when '0.11.1' then '386ffa26e52856107efb0b3075625d5b2331fa5acc8965fef87c1ab7d900c4e9'
-  when '0.12.0' then 'a38dccb7f544fad4ef2f95243bef7e2c9afbd76de0e4547b61b27698bf9065f3'
-  when '1.0.0' then '67c3c9f285584533ac365a56515f606fc91d4dcd0bfa69c2f159eeb5e37ea3b8'
   when '1.0.1' then 'b662e7718f0a8e23d2e819470a368f257e2bc46f76417712360de7def775e9d4'
   end
 when 'Linux'
   case node['docker']['binary']['version']
-  when '0.10.0' then 'ce1f5bc88a99f8b2331614ede7199f872bd20e4ac1806de7332cbac8e441d1a0'
-  when '0.11.0' then 'f80ba82acc0a6255960d3ff6fe145a8fdd0c07f136543fcd4676bb304daaf598'
-  when '0.11.1' then 'ed2f2437fd6b9af69484db152d65c0b025aa55aae6e0991de92d9efa2511a7a3'
-  when '0.12.0' then '0f611f7031642a60716e132a6c39ec52479e927dfbda550973e1574640135313'
-  when '1.0.0' then '55cf74ea4c65fe36e9b47ca112218459cc905ede687ebfde21b2ba91c707db94'
   when '1.0.1' then '1d9aea20ec8e640ec9feb6757819ce01ca4d007f208979e3156ed687b809a75b'
+  when '1.8.1' then '843f90f5001e87d639df82441342e6d4c53886c65f72a5cc4765a7ba3ad4fc57'
   end
 end
 default['docker']['binary']['url'] = "http://get.docker.io/builds/#{node['kernel']['name']}/#{node['docker']['arch']}/docker-#{node['docker']['binary']['version']}"
@@ -80,7 +71,7 @@ default['docker']['binary']['url'] = "http://get.docker.io/builds/#{node['kernel
 ## Package installation attributes
 
 default['docker']['package']['action'] = 'install'
-default['docker']['package']['distribution'] = 'docker'
+default['docker']['package']['distribution'] = "#{node['platform']}-#{node['lsb']['codename']}"
 default['docker']['package']['name'] = value_for_platform(
   'amazon' => {
     'default' => 'docker'
@@ -93,30 +84,27 @@ default['docker']['package']['name'] = value_for_platform(
     'default' => 'docker-io'
   },
   'debian' => {
-    'default' => 'lxc-docker'
+    'default' => 'docker-engine'
   },
   'mac_os_x' => {
     'default' => 'homebrew/binary/docker'
   },
   'ubuntu' => {
-    %w(12.04 12.10 13.04 13.10 14.04) => 'lxc-docker',
-    'default' => 'docker.io'
+    'default' => 'docker-engine'
   },
   'default' => nil
 )
 default['docker']['package']['repo_url'] = value_for_platform(
   'debian' => {
-    'default' => 'https://get.docker.io/ubuntu'
+    'default' => 'https://apt.dockerproject.org/repo'
   },
   'ubuntu' => {
-    %w(12.04 12.10 13.04 13.10 14.04) => 'https://get.docker.io/ubuntu',
-    'default' => nil
+    'default' => 'https://apt.dockerproject.org/repo'
   },
   'default' => nil
 )
-default['docker']['package']['repo_keyserver'] = 'keyserver.ubuntu.com'
-# Found at https://get.docker.io/ubuntu/
-default['docker']['package']['repo_key'] = 'A88D21E9'
+default['docker']['package']['repo_keyserver'] = 'p80.pool.sks-keyservers.net'
+default['docker']['package']['repo_key'] = '58118E89F3A912897C070ADBF76221572C52609D'
 
 ## Source installation attributes
 
